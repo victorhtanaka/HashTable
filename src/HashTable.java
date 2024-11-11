@@ -1,6 +1,7 @@
 
 public abstract class HashTable<K, V> implements IHashTable<K, V> {
     protected Node<K, V>[] table;
+    private int collisions;
     private int size;
 
     public HashTable(int capacity) {
@@ -13,6 +14,8 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
 
     @Override
     public V remove(K key) {
+
+
         return null;
     }
 
@@ -20,8 +23,12 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
         return size;
     }
 
-    protected int incrementSize() {
-        return size++;
+    private void incrementCollisions() {
+        collisions++;
+    }
+
+    protected void incrementSize() {
+        size++;
     }
 
     protected void increaseTableCapacity() {
@@ -32,6 +39,50 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
             }
         }
         table = newTable;
+    }
+
+    public V put(K key, V value) {
+        Node<K, V>[] table = this.table;
+        Node<K, V> newNode = new Node<>(key, value);
+        int pos = hashPos(key);
+        if (pos > table.length - 1) {
+            increaseTableCapacity();
+        }
+        if (table[pos] == null) {
+            table[pos] = newNode;
+        } else {
+            handleCollision(newNode, pos);
+        }
+        incrementSize();
+
+        return value;
+    }
+
+    public V get(K key) {
+        int pos = hashPos(key);
+        Node<K, V> currNode = table[pos];
+
+        while (currNode != null) {
+            if (currNode.getKey().equals(key)) {
+                return currNode.getValue();
+            }
+            currNode = currNode.getNext();
+        }
+
+        return null;
+    }
+
+    private void handleCollision(Node<K, V> node, int pos) {
+        Node<K, V> currNode = table[pos];
+        while (currNode != null) {
+            if (currNode.getNext() != null) {
+                currNode = currNode.getNext();
+            } else {
+                currNode.setNext(node);
+                currNode = null;
+            }
+        }
+        incrementCollisions();
     }
 
     protected static class Node<K, V> {
@@ -54,6 +105,10 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
 
         protected Node<K, V> getNext() {
             return next;
+        }
+
+        public K getKey() {
+            return key;
         }
     }
 }

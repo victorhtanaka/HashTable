@@ -3,5 +3,5 @@ public interface IHashTable<K, V> {
     V get(K key);
     V remove(K key);
     int size();
-    int generateHash(K key);
+    int hashPos(K key);
 }

@@ -1,15 +1,15 @@
 public class HashtableGood<K, V> extends HashTable<K, V> {
-    @Override
-    public V put(K key, V value) {
-        Node<K, V> newNode = new Node<>(key, value);
 
+    public HashtableGood(int size) {
+        super(10);
     }
-    @Override
-    public V get(K key) {
-        return null;
+
+    public HashtableGood() {
+        super();
     }
+
     @Override
-    public int generateHash(K key) {
-        return 0;
+    public int hashPos(K key) {
+        return Math.abs(key.hashCode()) % this.table.length;
     }
 }
