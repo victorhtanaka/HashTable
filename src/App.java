@@ -64,14 +64,16 @@ public class App {
         long startTime = System.nanoTime();
         good.get(10);
         good.get(3657);
+        good.get(157);
         long endTime = System.nanoTime();
         return endTime - startTime;
     }
 
     public static long getRetrieveTime2() {
         long startTime = System.nanoTime();
-        bad.get(1);
-        bad.get(1603);
+        bad.get(10);
+        bad.get(3657);
+        bad.get(157);
         long endTime = System.nanoTime();
         return endTime - startTime;
     }
