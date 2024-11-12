@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class App {
     public static HashtableGood<Integer, String> good = new HashtableGood<>();
@@ -10,15 +12,24 @@ public class App {
     public static void main(String[] args) {
         String filePath = "src/female_names.txt";
         ArrayList<String> names = readTXT(filePath);
+        System.out.println("Relatório");
 
         System.out.println("Tempo de inserção HashTable 1: " + measureInsertionTime(names) + " Nanosegundos");
         System.out.println("Colisões: " + good.getCollisions());
+        System.out.println("Tempo de recuperação HashTable 1: " + getRetrieveTime() + " Nanosegundos");
 
         System.out.println("Tempo de inserção HashTable 2: " + measureInsertionTime2(names) + " Nanosegundos");
         System.out.println("Colisões: " + bad.getCollisions());
-
-        System.out.println("Tempo de recuperação HashTable 1: " + getRetrieveTime() + " Nanosegundos");
         System.out.println("Tempo de recuperação HashTable 2: " + getRetrieveTime2() + " Nanosegundos");
+        System.out.println("");
+        System.out.println("Distribuição das chaves: ");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Deseja exibir as posições de qual tabela (1 ou 2)? ");
+        if (Objects.equals(sc.nextLine(), "1")) {
+            good.printNonNullKeys();
+        } else if (Objects.equals(sc.nextLine(), "2")) {
+            bad.printNonNullKeys();
+        }
     }
 
     public static long measureInsertionTime(ArrayList<String> names) {

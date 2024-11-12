@@ -9,10 +9,28 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
     }
 
     @Override
-    public V remove(K key) {
+    public void remove(K key) {
+        int pos = hashPos(key);
 
-        return null;
+        if (table[pos] != null) {
+            Node<K, V> current = table[pos];
+            Node<K, V> previous = null;
+
+            while (current != null) {
+                if (current.getKey().equals(key)) {
+                    if (previous == null) {
+                        table[pos] = current.getNext();
+                    } else {
+                        previous.setNext(current.getNext());
+                    }
+                    return;
+                }
+                previous = current;
+                current = current.getNext();
+            }
+        }
     }
+
 
     private void incrementCollisions() {
         collisions++;
@@ -30,6 +48,19 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
             }
         }
         table = newTable;
+    }
+    public void printNonNullKeys() {
+        for (int i = 0; i < table.length; i++) {
+            Node<K, V> node = table[i];
+            if (node != null) {
+                System.out.print("Posição " + i + ": ");
+                while (node != null) {
+                    System.out.print("Chave = " + node.getKey() + " ");
+                    node = node.getNext();
+                }
+                System.out.println();
+            }
+        }
     }
 
     public V put(K key, V value) {
