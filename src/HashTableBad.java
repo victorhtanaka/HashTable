@@ -1,8 +1,4 @@
 public class HashTableBad<K, V> extends HashTable<K, V> {
-    public HashTableBad(int size) {
-        super(10);
-    }
-
     public HashTableBad() {
         super();
     }

@@ -1,12 +1,8 @@
 
 public abstract class HashTable<K, V> implements IHashTable<K, V> {
     protected Node<K, V>[] table;
-    private int collisions;
-    private int size;
-
-    public HashTable(int capacity) {
-        table = new Node[capacity];
-    }
+    private int collisions = 0;
+    private int size = 0;
 
     public HashTable() {
         table = new Node[10];
@@ -14,7 +10,6 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
 
     @Override
     public V remove(K key) {
-
 
         return null;
     }
@@ -25,6 +20,10 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
 
     private void incrementCollisions() {
         collisions++;
+    }
+
+    public int getCollisions() {
+        return collisions;
     }
 
     protected void incrementSize() {
@@ -45,9 +44,7 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
         Node<K, V>[] table = this.table;
         Node<K, V> newNode = new Node<>(key, value);
         int pos = hashPos(key);
-        if (pos > table.length - 1) {
-            increaseTableCapacity();
-        }
+
         if (table[pos] == null) {
             table[pos] = newNode;
         } else {
@@ -55,8 +52,23 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
         }
         incrementSize();
 
+        if (size() >= table.length * 0.8) {
+            increaseTableCapacity();
+        }
+
         return value;
     }
+
+    private void handleCollision(Node<K, V> node, int pos) {
+        Node<K, V> currNode = table[pos];
+
+        while (currNode.getNext() != null) {
+            currNode = currNode.getNext();
+        }
+        currNode.setNext(node);
+        incrementCollisions();
+    }
+
 
     public V get(K key) {
         int pos = hashPos(key);
@@ -70,19 +82,6 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
         }
 
         return null;
-    }
-
-    private void handleCollision(Node<K, V> node, int pos) {
-        Node<K, V> currNode = table[pos];
-        while (currNode != null) {
-            if (currNode.getNext() != null) {
-                currNode = currNode.getNext();
-            } else {
-                currNode.setNext(node);
-                currNode = null;
-            }
-        }
-        incrementCollisions();
     }
 
     protected static class Node<K, V> {
