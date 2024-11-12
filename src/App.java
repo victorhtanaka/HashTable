@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class App {
     public static HashtableGood<Integer, String> good = new HashtableGood<>();
@@ -12,37 +11,38 @@ public class App {
         String filePath = "src/female_names.txt";
         ArrayList<String> names = readTXT(filePath);
 
-        System.out.println("Tempo de inserção HashTable 1: " + measureInsertionTime(names) + " Segundos");
-        System.out.println(good.table.length);
+        System.out.println("Tempo de inserção HashTable 1: " + measureInsertionTime(names) + " Nanosegundos");
         System.out.println("Colisões: " + good.getCollisions());
 
-        System.out.println("Tempo de inserção HashTable 2: " + measureInsertionTime2(names) + " Segundos");
-        System.out.println(bad.table.length);
+        System.out.println("Tempo de inserção HashTable 2: " + measureInsertionTime2(names) + " Nanosegundos");
         System.out.println("Colisões: " + bad.getCollisions());
+
+        System.out.println("Tempo de recuperação HashTable 1: " + getRetrieveTime() + " Nanosegundos");
+        System.out.println("Tempo de recuperação HashTable 2: " + getRetrieveTime2() + " Nanosegundos");
     }
 
-    public static double measureInsertionTime(ArrayList<String> names) {
-        long startTime = System.currentTimeMillis();
+    public static long measureInsertionTime(ArrayList<String> names) {
+        long startTime = System.nanoTime();
 
         for (int i = 0; i < names.size(); i++) {
             good.put(i, names.get(i));
         }
 
-        long endTime = System.currentTimeMillis();
+        long endTime = System.nanoTime();
 
-        return (double) (endTime - startTime) / 1000;
+        return endTime - startTime;
     }
 
-    public static double measureInsertionTime2(ArrayList<String> names) {
-        long startTime = System.currentTimeMillis();
+    public static long measureInsertionTime2(ArrayList<String> names) {
+        long startTime = System.nanoTime();
 
         for (int i = 0; i < names.size(); i++) {
             bad.put(i, names.get(i));
         }
 
-        long endTime = System.currentTimeMillis();
+        long endTime = System.nanoTime();
 
-        return (double) (endTime - startTime) / 1000;
+        return endTime - startTime;
     }
 
     public static ArrayList<String> readTXT(String filePath) {
@@ -58,5 +58,21 @@ public class App {
         }
 
         return namesList;
+    }
+
+    public static long getRetrieveTime() {
+        long startTime = System.nanoTime();
+        good.get(10);
+        good.get(3657);
+        long endTime = System.nanoTime();
+        return endTime - startTime;
+    }
+
+    public static long getRetrieveTime2() {
+        long startTime = System.nanoTime();
+        bad.get(1);
+        bad.get(1603);
+        long endTime = System.nanoTime();
+        return endTime - startTime;
     }
 }

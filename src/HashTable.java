@@ -14,20 +14,12 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
         return null;
     }
 
-    public int size() {
-        return size;
-    }
-
     private void incrementCollisions() {
         collisions++;
     }
 
     public int getCollisions() {
         return collisions;
-    }
-
-    protected void incrementSize() {
-        size++;
     }
 
     protected void increaseTableCapacity() {
@@ -47,12 +39,12 @@ public abstract class HashTable<K, V> implements IHashTable<K, V> {
 
         if (table[pos] == null) {
             table[pos] = newNode;
+            size++;
         } else {
             handleCollision(newNode, pos);
         }
-        incrementSize();
 
-        if (size() >= table.length * 0.8) {
+        if (size >= table.length * 0.8) {
             increaseTableCapacity();
         }
 
